@@ -4,6 +4,7 @@ In this project, we explored key NBA player performance metrics and identified s
 Additionally, we analyzed playing time and discovered that Sacramento Kings’ DeMar DeRozan played the highest average minutes per game, with 37.8 minutes.
 We also examined average points per game based on player age. The highest points-per-game average, 25.7, belongs to age 39. However, LeBron James is the only player in that age category. Furthermore, players aged 25 and over consistently outscored those younger than 25, highlighting the influence of experience on scoring performance.
 
-This project loaded data and wrote SQL queries on Google Cloud BigQuery
+This project loaded data and wrote SQL queries on Google Cloud BigQuery. 
+Data used: https://www.kaggle.com/datasets/sumitrodatta/nba-aba-baa-stats?select=Player+Per+Game.csv
 
 ![230523093708-01-lebron-james-052223](https://github.com/user-attachments/assets/1a610f60-7f77-49c6-a956-12acee83cf35)
