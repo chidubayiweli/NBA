@@ -1,0 +1,130 @@
+--NBA players with the longest streak of at least 20 point per game seasons
+
+With last_season_stat AS (
+SELECT season, 
+      player, 
+      pts_per_game, 
+      LAG(pts_per_game, 1) OVER (PARTITION BY player ORDER BY season) AS pts_last_season
+FROM `NBA.Player` 
+),
+pts_avg AS (
+SELECT *, CASE WHEN pts_per_game >= 20 AND pts_last_season >= 20 THEN 0 ELSE 1 END as pts_avg_over_20
+FROM last_season_stat 
+),
+pts_streak AS (
+SELECT *, SUM (pts_avg_over_20) OVER (PARTITION BY player ORDER BY season) AS streak
+FROM pts_avg
+)
+SELECT player, COUNT(CASE WHEN pts_per_game >= 20 THEN 1 END) as no_of_consecutive_seasons, MAX(season) as last_season, MIN(season) as first_season
+FROM pts_streak
+GROUP BY player, streak
+ORDER BY no_of_consecutive_seasons DESC
+
+--NBA players with the longest streak of at least 10 rebounds per game seasons
+
+With last_season_stat AS (
+SELECT season, 
+      player, 
+      trb_per_game, 
+      LAG(trb_per_game, 1) OVER (PARTITION BY player ORDER BY season) AS rb_last_season
+FROM `NBA.Player` 
+),
+rb_avg AS (
+SELECT *, CASE WHEN trb_per_game >= 10 AND rb_last_season >= 10 THEN 0 ELSE 1 END as rb_avg_over_10
+FROM last_season_stat 
+),
+rb_streak AS (
+SELECT *, SUM (rb_avg_over_10) OVER (PARTITION BY player ORDER BY season) AS streak
+FROM rb_avg
+)
+SELECT player, COUNT(CASE WHEN trb_per_game >= 10 THEN 1 END) as no_of_consecutive_seasons, MAX(season) as last_season, MIN(season) as first_season
+FROM rb_streak
+GROUP BY player, streak
+ORDER BY no_of_consecutive_seasons DESC
+
+--NBA players with the longest streak of at least 10 assists per game seasons
+
+With last_season_stat AS (
+SELECT season, 
+      player, 
+      ast_per_game, 
+      LAG(ast_per_game, 1) OVER (PARTITION BY player ORDER BY season) AS ast_last_season
+FROM `NBA.Player` 
+),
+ast_avg AS (
+SELECT *, CASE WHEN ast_per_game >= 10 AND ast_last_season >= 10 THEN 0 ELSE 1 END as ast_avg_over_10
+FROM last_season_stat 
+),
+ast_streak AS (
+SELECT *, SUM (ast_avg_over_10) OVER (PARTITION BY player ORDER BY season) AS streak
+FROM ast_avg
+)
+SELECT player, COUNT(CASE WHEN ast_per_game >= 10 THEN 1 END) as no_of_consecutive_seasons, MAX(season) as last_season, MIN(season) as first_season
+FROM ast_streak
+GROUP BY player, streak
+ORDER BY no_of_consecutive_seasons DESC
+
+--NBA players with the longest streak of at least 2 blocks per game seasons
+
+With last_season_stat AS (
+SELECT season, 
+      player, 
+      blk_per_game, 
+      LAG(blk_per_game, 1) OVER (PARTITION BY player ORDER BY season) AS blks_last_season
+FROM `NBA.Player` 
+),
+blks_avg AS (
+SELECT *, CASE WHEN blk_per_game >= 2 AND blks_last_season >= 2 THEN 0 ELSE 1 END as blks_avg_over_2
+FROM last_season_stat 
+),
+blks_streak AS (
+SELECT *, SUM (blks_avg_over_2) OVER (PARTITION BY player ORDER BY season) AS streak
+FROM blks_avg
+)
+SELECT player, COUNT(CASE WHEN blk_per_game >= 2 THEN 1 END) as no_of_consecutive_seasons, MAX(season) as last_season, MIN(season) as first_season
+FROM blks_streak
+GROUP BY player, streak
+ORDER BY no_of_consecutive_seasons DESC
+
+--Top 10 NBA minutes played per game 2023/24 season
+
+With NBA_2024_season AS (
+SELECT * 
+FROM `NBA.Player` 
+WHERE season = 2024
+)
+SELECT player, mp_per_game, RANK() OVER(ORDER BY mp_per_game DESC) AS RANK
+FROM NBA_2024_season
+ORDER BY RANK ASC
+LIMIT 10
+
+--Average points per game of NBA players under age 25 versus NBA players above the age of 25
+
+WITH NBA_2024_season AS (
+SELECT * 
+FROM `NBA.Player` 
+WHERE season = 2024
+)
+SELECT CASE WHEN age <= 25 THEN 'under_25' ELSE '25_and_over' END AS player_age, ROUND(AVG(pts_per_game),2) as avg_points_per_game
+FROM NBA_2024_season
+GROUP BY player_age
+
+--Average minutes played per game of NBA players in different groups
+
+WITH NBA_2024_season AS (
+SELECT * 
+FROM `NBA.Player` 
+WHERE season = 2024
+)
+SELECT age, ROUND(AVG(mp_per_game),2) as avg_gametime_per_age
+FROM NBA_2024_season
+GROUP BY age
+ORDER BY age 
+
+--
+
+
+
+
+
+
